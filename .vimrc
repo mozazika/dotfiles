@@ -17,19 +17,22 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'daylerees/colour-schemes', { 'rtp': 'vim/' }
 Bundle 'vim-scripts/Align'
 Bundle 'Raimondi/delimitMate'
-Bundle 'tpope/vim-ragtag'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-ragtag'
 Bundle 'tpope/vim-abolish'
-" Bundle 'scrooloose/syntastic'    " for javascript: npm install -g jshint
 Bundle 'tpope/vim-commentary'
+Bundle 'tpope/vim-unimpaired'
 Bundle 'kien/ctrlp.vim'
+Bundle 'JazzCore/ctrlp-cmatcher'
 Bundle 'fisadev/vim-ctrlp-cmdpalette'
 Bundle 'edsono/vim-matchit'
 Bundle 'scrooloose/nerdtree'
 Bundle 'corntrace/bufexplorer'
-Bundle 'Lokaltog/vim-easymotion'
+Bundle 'vim-scripts/LustyJuggler'
+Bundle 'vim-scripts/LustyExplorer'
+Bundle 'vim-scripts/taglist.vim'
 Bundle 'techlivezheng/vim-plugin-minibufexpl'
-Bundle 'kien/rainbow_parentheses.vim'
 
 Bundle 'sjl/gundo.vim'
 Bundle 'oplatek/Conque-Shell'
@@ -37,18 +40,11 @@ Bundle 'oplatek/Conque-Shell'
 " zen coding plugin
 Bundle 'tristen/vim-sparkup'
 Bundle 'pangloss/vim-javascript'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'vim-scripts/bufkill.vim'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'vim-scripts/taglist.vim'
-Bundle 'vim-scripts/LustyJuggler'
-Bundle 'vim-scripts/LustyExplorer'
 Bundle 'maxbrunsfeld/vim-yankstack'
 Bundle 'bling/vim-airline'
 
 " Syntax plugins
 Bundle 'hail2u/vim-css3-syntax'
-Bundle 'tpope/vim-markdown'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'cakebaker/scss-syntax.vim'
 Bundle 'jQuery'
@@ -359,6 +355,7 @@ let g:NERDTreeWinSize = 40
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
 
 " CtrlP
+let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 let g:ctrlp_custom_ignore = 'node_modules\|bower_components\|dist\|DS_Store\|git\|.tmp'
 " CtrlP (new fuzzy finder)
 let g:ctrlp_map = ',e'
@@ -443,7 +440,7 @@ nnoremap <M-LEFT>  :bp<cr>
 " visually selecting the pasted text
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " out gh to something useful
-nnoremap gh :BD!<cr>
+nnoremap gh :MBEbw!<cr>
 
 " convenient way to play a macro recorded to register q
 nnoremap <SPACE> @q
