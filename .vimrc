@@ -24,7 +24,6 @@ Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'kien/ctrlp.vim'
-Bundle 'JazzCore/ctrlp-cmatcher'
 Bundle 'fisadev/vim-ctrlp-cmdpalette'
 Bundle 'edsono/vim-matchit'
 Bundle 'scrooloose/nerdtree'
@@ -33,9 +32,7 @@ Bundle 'vim-scripts/LustyJuggler'
 Bundle 'vim-scripts/LustyExplorer'
 Bundle 'vim-scripts/taglist.vim'
 Bundle 'techlivezheng/vim-plugin-minibufexpl'
-
 Bundle 'sjl/gundo.vim'
-Bundle 'oplatek/Conque-Shell'
 
 " zen coding plugin
 Bundle 'tristen/vim-sparkup'
@@ -44,6 +41,7 @@ Bundle 'maxbrunsfeld/vim-yankstack'
 Bundle 'bling/vim-airline'
 
 " Syntax plugins
+Bundle 'mustache/vim-mustache-handlebars'
 Bundle 'hail2u/vim-css3-syntax'
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'cakebaker/scss-syntax.vim'
@@ -113,7 +111,7 @@ set wildignore=*.exe,*.com,*.dll,*.obj,*.a,*.o
 " How to display matches when auto-completing
 set wildmode=longest,list
 " Use ack (petdance's App::Ack) instead of GNU grep
-set grepprg=ack\ --ignore-dir\ dist\ --ignore-dir\ .tmp\ --ignore-dir\ bower_components
+set grepprg=ack\ --ignore-dir\ dist\ --ignore-dir\ .tmp\ --ignore-dir\ bower_components\ --ignore-dir\ _bower_components\ --ignore-dir\ _gh_pages
 " set shellpipe="&>" attempt not to output grep result on terminal
 " Autocomplete without "i" (don't search included files, too many in Perl)
 set complete=.,w,b,u,t
@@ -165,7 +163,7 @@ set background=dark
 
 if has("gui_macvim")
   set macmeta
-  colorscheme mud
+  colorscheme earthsong
   set guifont=Akkurat-mono:h14
 else
   colorscheme skyWeb
@@ -228,9 +226,9 @@ map <F8>   :cn<CR>
 map <S-F8> :cnf<CR>
 
 " navigate betweeen bufferes using TAB and S-TAB in normal mode
-nnoremap <TAB> :MBEbf<cr>
+" nnoremap <TAB> :MBEbf<cr>
 nnoremap <S-TAB> :MBEbb<cr>
-" nnoremap <TAB> :b#<cr>`.
+nnoremap <TAB> :b#<cr>
 
 nnoremap <F5> :buffers<CR>:buffer<space>
 
@@ -273,11 +271,11 @@ nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
 nnoremap <C-L> <C-W>l
 nnoremap <C-H> <C-W>h
-nnoremap <F6>  <C-W>w
 nnoremap -     <C-W>-
 nnoremap +     <C-W>+
 nnoremap <M-<> <C-W><
 nnoremap <M->> <C-W>>
+nnoremap <F6>  :only<CR>
 
 " insert newline without entering insert mode
 nnoremap <RETURN> o<ESC>^"_D
@@ -329,6 +327,8 @@ map <silent> <Leader>z gccj
 " TagList
 nnoremap <silent> <leader>tl :Tlist<cr>
 
+nnoremap <silent> <leader>/ :grep <c-r>/<cr>
+
 " Exploring Stuff Lusty way
 nmap ,j :LustyJuggler<CR>
 nmap ,b :LustyBufferExplorer<CR>
@@ -336,16 +336,15 @@ nmap ,g :LustyBufferGrep<CR>
 nmap ,f :LustyFilesystemExplorerFromHere<CR>
 nmap ,r :LustyFilesystemExplorer<CR>
 
-" Conque Shell
-function! s:Terminal(direction)
-  if "v" == a:direction
-    execute 'ConqueTermVSplit bash --login'
-  else
-    execute 'ConqueTermSplit bash --login'
-  endif
-endfunction
-command! Terminal  call s:Terminal("h")
-command! VTerminal call s:Terminal("v")
+" Fugitive
+nnoremap <silent> <leader>gw  :Gwrite<CR>
+nnoremap <silent> <leader>gb  :Gblame<CR>
+nnoremap <silent> <leader>gs  :Gstatus<CR>
+nnoremap <silent> <leader>gd  :Gdiff<CR>
+nnoremap <silent> <leader>gc  :Gcommit<CR>
+nnoremap <silent> <leader>grd :Gread<CR>
+nnoremap <silent> <leader>grm :Gremove<CR>
+nnoremap <silent> <leader>gp  :Git push<CR>
 
 " NERDTree
 nnoremap <silent> <leader>nt :NERDTreeToggle<CR>
@@ -355,10 +354,13 @@ let g:NERDTreeWinSize = 40
 let NERDTreeIgnore = ['\.pyc$', '\.pyo$']
 
 " CtrlP
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
-let g:ctrlp_custom_ignore = 'node_modules\|bower_components\|dist\|DS_Store\|git\|.tmp'
+" let g:ctrlp_max_files = 0
+" let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+let g:ctrlp_custom_ignore = 'node_modules\|jbower_components\|bower_components\|dist\|DS_Store\|git\|.tmp'
 " CtrlP (new fuzzy finder)
 let g:ctrlp_map = ',e'
+" Search from current directory instead of project root
+let g:ctrlp_working_path_mode = 0
 nmap ,G :CtrlPBufTagAll<CR>
 nmap ,l :CtrlPLine<CR>
 nmap ,m :CtrlPMRUFiles<CR>
@@ -383,8 +385,14 @@ nnoremap <silent> <leader>gu :GundoToggle<CR>
 let g:gundo_right=1
 let g:gundo_close_on_revert=1
 
+" Yankstack
+call yankstack#setup()
 " needs to be called after the yankstack setup
 map Y y$
+" visually selecg the pasted text
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+" nnoremap gp `[v`]
+
 
 " Align
 vnoremap = :Align =<CR>
@@ -437,10 +445,9 @@ nnoremap <silent> <leader>cl iconsole.log('');<esc>hhi
 nnoremap <M-RIGHT> :bn<cr>
 nnoremap <M-LEFT>  :bp<cr>
 
-" visually selecting the pasted text
-nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 " out gh to something useful
 nnoremap gh :MBEbw!<cr>
+nnoremap gH :MBEbd!<cr>
 
 " convenient way to play a macro recorded to register q
 nnoremap <SPACE> @q
@@ -463,3 +470,6 @@ augroup EnableSyntaxHighlighting
     autocmd! BufWinEnter,WinEnter * nested if exists('syntax_on') && ! exists('b:current_syntax') && ! empty(&l:filetype) && index(split(&eventignore, ','), 'Syntax') == -1 | syntax enable | endif
     autocmd! BufRead * if exists('syntax_on') && exists('b:current_syntax') && ! empty(&l:filetype) && index(split(&eventignore, ','), 'Syntax') != -1 | unlet! b:current_syntax | endif
 augroup END
+
+
+nnoremap <silent> <Leader>rm :call delete(expand('%')) \| bdelete!<CR>
